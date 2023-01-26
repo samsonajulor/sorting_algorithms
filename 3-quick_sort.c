@@ -1,83 +1,100 @@
+/*
+ * File: 3-quick_sort.c
+ * Auth: Samson Ajulor
+ */
+
 #include "sort.h"
 
+void swap_ints(int *a, int *b);
+int lomuto_partition(int *array, size_t size, int left, int right);
+void lomuto_sort(int *array, size_t size, int left, int right);
+void quick_sort(int *array, size_t size);
+
 /**
- * quick_sort - Super fast and impractical sorting function
- * @array: The array to be sorted
- * @size: size of the array
- **/
+ * swap_ints - Swap two integers in an array.
+ * @a: The first integer to swap.
+ * @b: The second integer to swap.
+ */
+void swap_ints(int *a, int *b)
+{
+	int tmp;
+
+	tmp = *a;
+	*a = *b;
+	*b = tmp;
+}
+
+/**
+ * lomuto_partition - Order a subset of an array of integers according to
+ *                    the lomuto partition scheme (last element as pivot).
+ * @array: The array of integers.
+ * @size: The size of the array.
+ * @left: The starting index of the subset to order.
+ * @right: The ending index of the subset to order.
+ *
+ * Return: The final partition index.
+ */
+int lomuto_partition(int *array, size_t size, int left, int right)
+{
+	int *pivot, above, below;
+
+	pivot = array + right;
+	for (above = below = left; below < right; below++)
+	{
+		if (array[below] < *pivot)
+		{
+			if (above < below)
+			{
+				swap_ints(array + below, array + above);
+				print_array(array, size);
+			}
+			above++;
+		}
+	}
+
+	if (array[above] > *pivot)
+	{
+		swap_ints(array + above, pivot);
+		print_array(array, size);
+	}
+
+	return (above);
+}
+
+/**
+ * lomuto_sort - Implement the quicksort algorithm through recursion.
+ * @array: An array of integers to sort.
+ * @size: The size of the array.
+ * @left: The starting index of the array partition to order.
+ * @right: The ending index of the array partition to order.
+ *
+ * Description: Uses the Lomuto partition scheme.
+ */
+void lomuto_sort(int *array, size_t size, int left, int right)
+{
+	int part;
+
+	if (right - left > 0)
+	{
+		part = lomuto_partition(array, size, left, right);
+		lomuto_sort(array, size, left, part - 1);
+		lomuto_sort(array, size, part + 1, right);
+	}
+}
+
+/**
+ * quick_sort - Sort an array of integers in ascending
+ *              order using the quicksort algorithm.
+ * @array: An array of integers.
+ * @size: The size of the array.
+ *
+ * Description: Uses the Lomuto partition scheme. Prints
+ *              the array after each swap of two elements.
+ */
 void quick_sort(int *array, size_t size)
 {
-	int *whole_array;
-	size_t full_size;
-
-	if (array == NULL)
+	if (array == NULL || size < 2)
 		return;
-	whole_array = &array[0];
-	full_size = size;
-	quick_sort_really(array, size, whole_array, full_size);
-}
 
-/**
- * quick_sort_really - Used to call the partitioner to get subarrays
- * @array: The array (sub array of last call) to be sorted
- * @size: Size of the array variable
- * @whole_array: The whole array that is to be sorted
- * @full_size: The full size of the array that's being sorted originally
- **/
-void quick_sort_really(int *array, size_t size, int *whole_array,
-		       size_t full_size)
-{
-	size_t part;
-
-	part = 0;
-
-	if (size > 1)
-	{
-		part = partitioner(array, size, whole_array, full_size);
-		quick_sort_really(&array[0], part, whole_array, full_size);
-		quick_sort_really(&array[part], size - part, whole_array, full_size);
-	}
-
-}
-
-/**
- * partitioner - Finds where to split the array and swaps larger items right
- * and smaller items left
- * @array: Size of the array (sub array of last call) being sorted
- * @size: Size of the array variable
- * @whole_array: The whole array that was being sorted
- * @full_size: Full size of the original array
- * Return: The index where the array should be split into two subarrays
- **/
-size_t partitioner(int *array, size_t size, int *whole_array, size_t full_size)
-{
-	int pivot;
-	long front;
-	long end;
-	int temp;
-
-	pivot = array[size - 1];
-	front = -1;
-	end = size;
-
-
-	while (1)
-	{
-		do {
-			front++;
-		} while (array[front] < pivot);
-		do {
-			end--;
-		} while (array[end] > pivot);
-
-		if (front >= end)
-		{
-			return ((size_t) front);
-		}
-		temp = array[front];
-		array[front] = array[end];
-		array[end] = temp;
-		print_array(whole_array, full_size);
-	}
-	return (end);
+	lomuto_sort(array, size, 0, size - 1);
 }
