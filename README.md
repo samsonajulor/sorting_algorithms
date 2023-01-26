@@ -4,14 +4,14 @@ In this project, I implemented twelve different sorting algorithms.
 
 ## Tests :heavy_check_mark:
 
-* [tests](./tests): Folder of test files. Provided by Holberton School.
+* [tests](./tests): Folder of test files. Provided by ALX School.
 
 ## Helper Files :raised_hands:
 
 * [print_array.c](./print_array.c): C function that prints an array of
-integers. Provided by Holberton School.
+integers. Provided by ALX School.
 * [print_list.c](./print_list.c): C function that prints a `listint_t`
-doubly-linked list. Provided by Holberton School.
+doubly-linked list. Provided by ALX School.
 
 ## Header Files :file_folder:
 
